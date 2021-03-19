@@ -1,22 +1,22 @@
 Migrate playlist from a player to another.
-Folder structure:
-
-playlist_migrator/
--- players/
--- -- spotify/
--- -- -- spotify.py
--- -- deezer/
--- -- -- deezer.py
--- -- youtube_music/
--- -- -- youtube_music.py
--- music.py
--- playlist.py
--- api.py
-
-
-Which api we expect to a player has?
 
 ```
+Folder structure:
+playlist_migrator/
+| players/
+    | spotify/
+        spotify.py
+    | deezer/
+        deezer.py
+    | youtube_music/
+        youtube_music.py
+| music.py
+| playlist.py
+| api.py
+```
+
+```
+# Player class api contract
 player = Spotify(configurations)
 player.get_playlist('playlist_id')
 # returns a list of <Music>
@@ -24,6 +24,7 @@ player.create_playlist(playlist_name, music_list)
 # returns a response with which musics were found in that player and which one was not.
 ```
 
+```
 Endpoints:
 
 # Players endpoints
@@ -47,4 +48,4 @@ BODY:
   "playlist_name": string,
   "musics": list[music_object]
 }
-
+```
