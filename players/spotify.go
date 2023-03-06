@@ -70,7 +70,7 @@ type SpotifyPlayListsResponse struct {
 	Total    int `json:"total"`
 }
 
-func (s Spotify) Authenticate(req *http.Request) {
+func (s Spotify) authenticate(req *http.Request) {
 	userID := s.Config.UserApiID
 	token := s.Config.UserApiToken
 	URL := "https://accounts.spotify.com/api/token"
@@ -120,7 +120,7 @@ func (s Spotify) GetPlaylists() []Playlist {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
-	s.Authenticate(request)
+	s.authenticate(request)
 
 	response, err := s.HttpClient.Do(request)
 	if err != nil {
