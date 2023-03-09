@@ -231,11 +231,23 @@ func (s Spotify) parsePlaylists(data []byte) []Playlist {
 	json.Unmarshal([]byte(data), &playlistsResponse)
 
 	var playlists []Playlist
-	for _, item := range playlistsResponse.Items {
-		playlists = append(playlists, Playlist{ID: item.ID, Name: item.Name, Musics: []Music{}})
+	for _, playlist := range playlistsResponse.Items {
+		playlists = append(playlists, Playlist{ID: playlist.ID, Name: playlist.Name, Musics: []Music{}})
 	}
 
 	return playlists
+}
+
+func (s Spotify) parsePlaylistMusics(data []byte) []Music {
+	var playListDetailResponse SpotifyPlayListDetailResponse
+	json.Unmarshal([]byte(data), &playListDetailResponse)
+
+	var musics []Music
+	for _, music := range playListDetailResponse.Tracks.Items {
+		musics = append(musics, Music{ID: music.Track.ID, Name: music.Track.Name})
+	}
+
+	return musics
 }
 
 func (s Spotify) GetPlaylists() ([]Playlist, error) {
@@ -257,4 +269,26 @@ func (s Spotify) GetPlaylists() ([]Playlist, error) {
 	}
 
 	return s.parsePlaylists(data), nil
+}
+
+func (s Spotify) GetMusics(playListId string) ([]Music, error) {
+	URL := fmt.Sprintf("https://api.spotify.com/v1/playlists/%s", playListId)
+
+	request, err := http.NewRequest("GET", URL, nil)
+	if err != nil {
+		return nil, err
+	}
+	request.Header.Add("Authorization", "Bearer "+s.ApiKey)
+
+	response, err := s.HttpClient.Do(request)
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.parsePlaylistMusics(data), nil
 }

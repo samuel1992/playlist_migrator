@@ -7,8 +7,8 @@ type HTTPClient interface {
 }
 
 type Music struct {
-	Name string
 	ID   string
+	Name string
 }
 
 type Playlist struct {
