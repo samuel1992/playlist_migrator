@@ -2,6 +2,10 @@ package players
 
 import "net/http"
 
+type HTTPClient interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
 type Music struct {
 	Name string
 	ID   string
