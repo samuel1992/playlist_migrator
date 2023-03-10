@@ -2,11 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/samuel1992/playlist_migrator/players"
 	"net/http"
 	"os"
 	"sync"
-
-	"github.com/samuel1992/playlist_migrator/players"
 )
 
 func main() {
@@ -20,30 +19,28 @@ func main() {
 		os.Exit(1)
 	}
 
-  wg := &sync.WaitGroup{} 
-  chMusics := make(chan []players.Music, len(playlists))
+	wg := &sync.WaitGroup{}
+	wg.Add(len(playlists))
+	for i := range playlists {
+		go fetchMusics(player, &playlists[i], wg)
+	}
+	wg.Wait()
 
-  wg.Add(len(playlists))
-  for index, playlist := range playlists {
-    go getMusics(player, playlist, wg, chMusics)
-    playlists[index].Musics = <- chMusics
-  }
-  wg.Wait()
+	for _, playlist := range playlists {
+    fmt.Println("PLAYLIST:", playlist.Name)
+    fmt.Println("MUSICS:")
+		fmt.Printf("%v\n\n", playlist.Musics)
+	}
 
-  for _, playlist := range playlists {
-    fmt.Println("new playlist ----->")
-    fmt.Printf("%+v\n", playlist)
-  }
-
-  fmt.Println("FINISH")
+	fmt.Println("FINISH")
 }
 
- func getMusics(player *players.Spotify, playlist players.Playlist, wg *sync.WaitGroup, chMusics chan []players.Music){
-   musics, err := player.GetMusics(playlist.ID)
-   if err != nil {
-     fmt.Println(err)
-   }
+func fetchMusics(player *players.Spotify, playlist *players.Playlist, wg *sync.WaitGroup) {
+	musics, err := player.GetMusics(playlist.ID)
+	if err != nil {
+		fmt.Println(err)
+	}
 
-   chMusics <- musics
-   wg.Done()
- } 
+	playlist.Musics = musics
+	wg.Done()
+}

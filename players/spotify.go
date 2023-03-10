@@ -232,7 +232,7 @@ func (s Spotify) parsePlaylists(data []byte) []Playlist {
 
 	var playlists []Playlist
 	for _, playlist := range playlistsResponse.Items {
-		playlists = append(playlists, Playlist{ID: playlist.ID, Name: playlist.Name, Musics: []Music{}})
+		playlists = append(playlists, Playlist{ID: playlist.ID, Name: playlist.Name})
 	}
 
 	return playlists
