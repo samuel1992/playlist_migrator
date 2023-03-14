@@ -18,6 +18,7 @@ type Playlist struct {
 }
 
 type Player interface {
-	Authenticate(*http.Client, *http.Request)
-	GetPlaylists() []Playlist
+	FetchApiKey()
+	GetPlaylists() ([]Playlist, error)
+	GetMusics(playListId string) ([]Music, error)
 }

@@ -27,15 +27,15 @@ func main() {
 	wg.Wait()
 
 	for _, playlist := range playlists {
-    fmt.Println("PLAYLIST:", playlist.Name)
-    fmt.Println("MUSICS:")
+		fmt.Println("PLAYLIST:", playlist.Name)
+		fmt.Println("MUSICS:")
 		fmt.Printf("%v\n\n", playlist.Musics)
 	}
 
 	fmt.Println("FINISH")
 }
 
-func fetchMusics(player *players.Spotify, playlist *players.Playlist, wg *sync.WaitGroup) {
+func fetchMusics(player players.Player, playlist *players.Playlist, wg *sync.WaitGroup) {
 	musics, err := player.GetMusics(playlist.ID)
 	if err != nil {
 		fmt.Println(err)

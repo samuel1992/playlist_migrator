@@ -226,7 +226,7 @@ func (s *Spotify) FetchApiKey() {
 	s.ApiKey = jsonResponseData.AccessToken
 }
 
-func (s Spotify) parsePlaylists(data []byte) []Playlist {
+func parsePlaylists(data []byte) []Playlist {
 	var playlistsResponse SpotifyPlayListsResponse
 	json.Unmarshal([]byte(data), &playlistsResponse)
 
@@ -238,7 +238,7 @@ func (s Spotify) parsePlaylists(data []byte) []Playlist {
 	return playlists
 }
 
-func (s Spotify) parsePlaylistMusics(data []byte) []Music {
+func parsePlaylistMusics(data []byte) []Music {
 	var playListDetailResponse SpotifyPlayListDetailResponse
 	json.Unmarshal([]byte(data), &playListDetailResponse)
 
@@ -268,7 +268,7 @@ func (s Spotify) GetPlaylists() ([]Playlist, error) {
 		return nil, err
 	}
 
-	return s.parsePlaylists(data), nil
+	return parsePlaylists(data), nil
 }
 
 func (s Spotify) GetMusics(playListId string) ([]Music, error) {
@@ -290,5 +290,5 @@ func (s Spotify) GetMusics(playListId string) ([]Music, error) {
 		return nil, err
 	}
 
-	return s.parsePlaylistMusics(data), nil
+	return parsePlaylistMusics(data), nil
 }
