@@ -11,7 +11,7 @@ import (
 func main() {
 	config := parseConfig()
 	player := &players.Spotify{HttpClient: &http.Client{}, Config: config.Spotify}
-	player.FetchApiKey()
+	player.Authenticate()
 
 	playlists, err := player.GetPlaylists()
 	if err != nil {

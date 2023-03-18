@@ -19,10 +19,10 @@ type SpotifyConfig struct {
 type Spotify struct {
 	HttpClient HTTPClient
 	Config     SpotifyConfig
-	ApiKey     string
+	apiKey     string
 }
 
-func (s *Spotify) FetchApiKey() {
+func (s *Spotify) Authenticate() {
 	userID := s.Config.UserApiID
 	token := s.Config.UserApiToken
 	URL := "https://accounts.spotify.com/api/token"
@@ -50,7 +50,7 @@ func (s *Spotify) FetchApiKey() {
 		fmt.Println(err.Error())
 	}
 
-	s.ApiKey = jsonResponseData.AccessToken
+	s.apiKey = jsonResponseData.AccessToken
 }
 
 func parsePlaylists(data []byte) []Playlist {
@@ -83,7 +83,7 @@ func (s Spotify) GetPlaylists() ([]Playlist, error) {
 	if err != nil {
 		return nil, err
 	}
-	request.Header.Add("Authorization", "Bearer "+s.ApiKey)
+	request.Header.Add("Authorization", "Bearer "+s.apiKey)
 
 	response, err := s.HttpClient.Do(request)
 	if err != nil {
@@ -105,7 +105,7 @@ func (s Spotify) GetMusics(playListId string) ([]Music, error) {
 	if err != nil {
 		return nil, err
 	}
-	request.Header.Add("Authorization", "Bearer "+s.ApiKey)
+	request.Header.Add("Authorization", "Bearer "+s.apiKey)
 
 	response, err := s.HttpClient.Do(request)
 	if err != nil {

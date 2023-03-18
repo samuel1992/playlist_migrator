@@ -21,7 +21,7 @@ type Playlist struct {
 }
 
 type Player interface {
-	FetchApiKey()
+	Authenticate()
 	GetPlaylists() ([]Playlist, error)
 	GetMusics(playListId string) ([]Music, error)
 }
