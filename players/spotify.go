@@ -17,20 +17,24 @@ type SpotifyConfig struct {
 }
 
 type Spotify struct {
-	HttpClient HTTPClient
-	Config     SpotifyConfig
-	apiKey     string
+	HttpClient         HTTPClient
+	Config             SpotifyConfig
+	apiKey             string
+	PlaylistsURL       string
+	PlaylistDetailsURL string
 }
+
+var AUTH_URL string = "https://accounts.spotify.com/api/token"
+var BASE_URL string = "https://api.spotify.com"
 
 func (s *Spotify) Authenticate() {
 	userID := s.Config.UserApiID
 	token := s.Config.UserApiToken
-	URL := "https://accounts.spotify.com/api/token"
 
 	urlForm := url.Values{}
 	urlForm.Set("grant_type", "client_credentials")
 
-	request, err := http.NewRequest("POST", URL, strings.NewReader(urlForm.Encode()))
+	request, err := http.NewRequest("POST", AUTH_URL, strings.NewReader(urlForm.Encode()))
 	request.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	request.SetBasicAuth(userID, token)
 	response, err := s.HttpClient.Do(request)
@@ -78,7 +82,7 @@ func parsePlaylistMusics(data []byte) []Music {
 }
 
 func (s Spotify) GetPlaylists() ([]Playlist, error) {
-	URL := fmt.Sprintf("https://api.spotify.com/v1/users/%s/playlists", s.Config.UserID)
+	URL := fmt.Sprintf(BASE_URL+"/v1/users/%s/playlists", s.Config.UserID)
 	request, err := http.NewRequest("GET", URL, nil)
 	if err != nil {
 		return nil, err
@@ -99,7 +103,7 @@ func (s Spotify) GetPlaylists() ([]Playlist, error) {
 }
 
 func (s Spotify) GetMusics(playListId string) ([]Music, error) {
-	URL := fmt.Sprintf("https://api.spotify.com/v1/playlists/%s", playListId)
+	URL := fmt.Sprintf(BASE_URL+"/v1/playlists/%s", playListId)
 
 	request, err := http.NewRequest("GET", URL, nil)
 	if err != nil {

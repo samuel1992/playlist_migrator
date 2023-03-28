@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/samuel1992/playlist_migrator/players"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"sync"
+
+	"github.com/samuel1992/playlist_migrator/players"
 )
 
 type PlayersConfig struct {
