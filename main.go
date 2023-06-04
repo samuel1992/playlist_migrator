@@ -39,8 +39,8 @@ func getPlaylists() {
 	}
 
 	wg := &sync.WaitGroup{}
-	wg.Add(len(playlists))
 	for i := range playlists {
+		wg.Add(1)
 		go fetchMusics(player, &playlists[i], wg)
 	}
 	wg.Wait()
